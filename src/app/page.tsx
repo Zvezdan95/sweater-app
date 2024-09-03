@@ -25,14 +25,16 @@ type AppState = {
     foundationDetails: FoundationDetails | null
 }
 
-const initialState: AppState = {
-    unassignedSweaters: allSweaters,
-    draggingSweater: null,
-    lefShelf: [],
-    middleLefShelf: [],
-    middleRightShelf: [],
-    rightShelf: [],
-    foundationDetails: null
+const initialState = (): AppState => {
+    return {
+        unassignedSweaters: allSweaters,
+        draggingSweater: null,
+        lefShelf: [],
+        middleLefShelf: [],
+        middleRightShelf: [],
+        rightShelf: [],
+        foundationDetails: null
+    }
 };
 
 type MsgPayload = {
@@ -43,6 +45,8 @@ type MsgPayload = {
 }
 
 function reducer(prevState: AppState, payload: MsgPayload): AppState {
+    console.log("initialState", initialState)
+    console.log("prevState", prevState)
     switch (payload.msg) {
 
         case Msg.OnDragStart:
@@ -85,7 +89,7 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
             return prevState;
 
         case Msg.OnReset:
-            return initialState;
+            return {...initialState()};
 
         case Msg.OnModalClose:
             return {...prevState, foundationDetails: null};
@@ -100,7 +104,7 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
 
 
 export default function Home() {
-    const [appState, dispatch] = useReducer(reducer, initialState);
+    const [appState, dispatch] = useReducer(reducer, {...initialState()});
     const state: AppState = appState;
 
 

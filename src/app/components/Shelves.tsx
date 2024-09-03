@@ -28,7 +28,7 @@ export function Shelves({
                             onDragOver
                         }: ShelvesProps) {
     return (
-        <div className="flex flex-col md:flex-row mt-32 justify-start md:justify-between">
+        <div className="flex flex-col md:flex-row 16 justify-start md:justify-between">
             <ShelfWithInfo
                            linkUrl={"www.szentistvanzene.hu"}
                            name={"SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY"}

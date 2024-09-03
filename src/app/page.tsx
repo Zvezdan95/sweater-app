@@ -5,11 +5,14 @@ import React, {useReducer} from "react";
 import {ResetButton} from "@/app/components/ResetButton";
 import {SelfPosition, Shelves} from "@/app/components/Shelves";
 import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
+import {FoundationDetails} from "@/app/components/ShelfWithInfo";
 
 enum Msg {
     OnDragStart,
     OnDrop,
-    OnReset
+    OnReset,
+    OnModalClose,
+    OnModalOpen
 }
 
 type AppState = {
@@ -19,6 +22,7 @@ type AppState = {
     middleLefShelf: SweaterType[]
     middleRightShelf: SweaterType[]
     rightShelf: SweaterType[]
+    foundationDetails: FoundationDetails | null
 }
 
 const initialState: AppState = {
@@ -27,13 +31,15 @@ const initialState: AppState = {
     lefShelf: [],
     middleLefShelf: [],
     middleRightShelf: [],
-    rightShelf: []
+    rightShelf: [],
+    foundationDetails: null
 };
 
 type MsgPayload = {
     msg: Msg
     sweater: SweaterType | null
     shelf: SelfPosition | null
+    foundationDetails: FoundationDetails | null
 }
 
 function reducer(prevState: AppState, payload: MsgPayload): AppState {
@@ -80,6 +86,13 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
 
         case Msg.OnReset:
             return initialState;
+
+        case Msg.OnModalClose:
+            return {...prevState, foundationDetails: null};
+
+        case Msg.OnModalOpen:
+            return {...prevState, foundationDetails: payload.foundationDetails};
+
         default:
             return prevState;
     }
@@ -113,8 +126,16 @@ export default function Home() {
         console.log("saved!");
     }
 
+    function handleModalClose() {
+        dispatch({msg: Msg.OnModalClose});
+    }
+
+    function handleModalOpen(foundationDetails: FoundationDetails) {
+        dispatch({msg: Msg.OnModalOpen, foundationDetails: foundationDetails});
+    }
+
     return (
-        <main className="flex min-h-screen flex-col bg-custom-blue-100 items-center">
+        <main className="flex min-h-screen flex-col bg-custom-blue-100 items-center relative">
             <ImageHeader/>
             <CoatHangerWithSweaters
                 sweaters={state.unassignedSweaters}
@@ -128,8 +149,23 @@ export default function Home() {
                 rightShelf={state.rightShelf}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
+                onInfoClick={handleModalOpen}
             />
             <ResetButton onClick={handleReset}/>
+            {state.foundationDetails && <div className={"fixed inset-0 flex items-center justify-center p-4"}>
+                <div
+                    className="flex flex-col items-center gap-y-4 p-4 rounded-md bg-custom-blue-500/90 overflow-hidden relative">
+                    <div className="text-4xl"> {state.foundationDetails.name}</div>
+                    <div className="text-lg"> {state.foundationDetails.description} </div>
+                    <button
+                        className="absolute right-2 top-2 rounded-full bg-custom-blue-500 p-1 px-2 font-bold"
+                        onClick={handleModalClose}
+                    >X
+                    </button>
+
+                </div>
+            </div>}
+
         </main>
     );
 }

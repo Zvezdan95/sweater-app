@@ -19,7 +19,7 @@ export function SaveButton({onClick, isVisible}: SaveButtonProps) {
                         "border-2 border-white border-solid " +
                         "shadow-lg shadow-custom-blue-500 " +
                         "text-4xl font-bold text-white " +
-                        "bg-custom-blue-500 hover:bg-custom-blue-400 " +
+                        "bg-custom-blue-450 hover:bg-custom-blue-400 " +
                         "transition-colors duration-500"
                     }>
                 ELKÜLDÖM

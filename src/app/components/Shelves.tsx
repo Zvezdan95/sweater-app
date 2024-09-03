@@ -1,4 +1,4 @@
-import {ShelfWithInfo} from "@/app/components/ShelfWithInfo";
+import {ShelfWithInfo, FoundationDetails} from "@/app/components/ShelfWithInfo";
 import {SweaterType} from "@/app/components/Sweater";
 
 interface ShelvesProps {
@@ -8,6 +8,7 @@ interface ShelvesProps {
     rightShelf: SweaterType[]
     onDrop: (Self, MouseEvent) => void
     onDragOver: (MouseEvent) => void
+    onInfoClick: (FoundationDetails) => void
 }
 
 export enum SelfPosition {
@@ -17,7 +18,15 @@ export enum SelfPosition {
     Right
 }
 
-export function Shelves({lefShelf, middleLefShelf, middleRightShelf, rightShelf, onDrop, onDragOver}: ShelvesProps) {
+export function Shelves({
+                            onInfoClick,
+                            lefShelf,
+                            middleLefShelf,
+                            middleRightShelf,
+                            rightShelf,
+                            onDrop,
+                            onDragOver
+                        }: ShelvesProps) {
     return (
         <div className="flex flex-col md:flex-row mt-32 justify-start md:justify-between">
             <ShelfWithInfo counter={0}
@@ -26,6 +35,7 @@ export function Shelves({lefShelf, middleLefShelf, middleRightShelf, rightShelf,
                            sweaters={lefShelf}
                            onDragOver={onDragOver}
                            onDrop={e => onDrop(SelfPosition.Left, e)}
+                           onInfoClick={onInfoClick}
             />
             <ShelfWithInfo counter={0}
                            linkUrl={"www.autizmus.hu"}
@@ -33,6 +43,7 @@ export function Shelves({lefShelf, middleLefShelf, middleRightShelf, rightShelf,
                            onDragOver={onDragOver}
                            onDrop={e => onDrop(SelfPosition.MiddleLeft, e)}
                            sweaters={middleLefShelf}
+                           onInfoClick={onInfoClick}
             />
             <ShelfWithInfo counter={0}
                            linkUrl={"www.elelmiszerbank.hu"}
@@ -40,6 +51,7 @@ export function Shelves({lefShelf, middleLefShelf, middleRightShelf, rightShelf,
                            sweaters={middleRightShelf}
                            onDragOver={onDragOver}
                            onDrop={e => onDrop(SelfPosition.MiddleRight, e)}
+                           onInfoClick={onInfoClick}
             />
             <ShelfWithInfo counter={0}
                            linkUrl={"www.lampas92.hu"}
@@ -47,6 +59,7 @@ export function Shelves({lefShelf, middleLefShelf, middleRightShelf, rightShelf,
                            sweaters={rightShelf}
                            onDragOver={onDragOver}
                            onDrop={e => onDrop(SelfPosition.Right, e)}
+                           onInfoClick={onInfoClick}
             />
         </div>
     );

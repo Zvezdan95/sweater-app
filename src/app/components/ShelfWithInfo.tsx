@@ -33,7 +33,7 @@ export function ShelfWithInfo({counter, name, linkUrl, sweaters, onDrop, onDragO
                 <FoundationLink linkUrl={linkUrl}
                                 linkType={FoundationLinkType.IconLink}/>
             </div>
-            <span className="text-8xl text-white">{String(Math.round(counter))}</span>
+            <span className="text-8xl text-white">{String(sweaters.length)}</span>
             <span className="text-2xle text-custom-blue-300 text-center">{String(name)}</span>
             <div className="rounded-xl bg-custom-blue-500 relative p-2 pl-10 hidden md:block lg:block">
                 <FoundationLink linkUrl={linkUrl}

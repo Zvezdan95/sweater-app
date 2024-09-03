@@ -29,7 +29,7 @@ export function Shelves({
                         }: ShelvesProps) {
     return (
         <div className="flex flex-col md:flex-row mt-32 justify-start md:justify-between">
-            <ShelfWithInfo counter={0}
+            <ShelfWithInfo
                            linkUrl={"www.szentistvanzene.hu"}
                            name={"SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY"}
                            sweaters={lefShelf}
@@ -37,7 +37,7 @@ export function Shelves({
                            onDrop={e => onDrop(SelfPosition.Left, e)}
                            onInfoClick={onInfoClick}
             />
-            <ShelfWithInfo counter={0}
+            <ShelfWithInfo
                            linkUrl={"www.autizmus.hu"}
                            name={"AUTIZMUS ALAPÍTVÁNY"}
                            onDragOver={onDragOver}
@@ -45,7 +45,7 @@ export function Shelves({
                            sweaters={middleLefShelf}
                            onInfoClick={onInfoClick}
             />
-            <ShelfWithInfo counter={0}
+            <ShelfWithInfo
                            linkUrl={"www.elelmiszerbank.hu"}
                            name={"ÉLELMISZERBANK EGYESÜLET"}
                            sweaters={middleRightShelf}
@@ -53,7 +53,7 @@ export function Shelves({
                            onDrop={e => onDrop(SelfPosition.MiddleRight, e)}
                            onInfoClick={onInfoClick}
             />
-            <ShelfWithInfo counter={0}
+            <ShelfWithInfo
                            linkUrl={"www.lampas92.hu"}
                            name={"LÁMPÁS ’92 ALAPÍTVÁNY"}
                            sweaters={rightShelf}

@@ -1,7 +1,7 @@
 "use client"
 import {ImageHeader} from "@/app/components/ImageHeader";
 import {allSweaters, SweaterType} from "@/app/components/Sweater";
-import {useReducer} from "react";
+import React, {useReducer} from "react";
 import {ResetButton} from "@/app/components/ResetButton";
 import {SelfPosition, Shelves} from "@/app/components/Shelves";
 import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
@@ -40,7 +40,6 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
     switch (payload.msg) {
 
         case Msg.OnDragStart:
-            console.log("OnDragStart", payload.sweater)
             return {...prevState, draggingSweater: payload.sweater};
 
         case Msg.OnDrop:
@@ -92,7 +91,7 @@ export default function Home() {
     const state: AppState = appState;
 
 
-    function handleReset(e: MouseEvent) {
+    function handleReset(e: React.MouseEvent) {
         return dispatch({msg: Msg.OnReset, sweater: null});
     }
 
@@ -110,10 +109,18 @@ export default function Home() {
         dispatch({msg: Msg.OnDragStart, sweater: sweater});
     }
 
+    function handleOnSave(e: React.MouseEvent) {
+        console.log("saved!");
+    }
+
     return (
         <main className="flex min-h-screen flex-col bg-custom-blue-100 items-center">
             <ImageHeader/>
-            <CoatHangerWithSweaters sweaters={state.unassignedSweaters} onDragStart={handleDragStart}/>
+            <CoatHangerWithSweaters
+                sweaters={state.unassignedSweaters}
+                onDragStart={handleDragStart}
+                onSave={handleOnSave}
+            />
             <Shelves
                 lefShelf={state.lefShelf}
                 middleLefShelf={state.middleLefShelf}

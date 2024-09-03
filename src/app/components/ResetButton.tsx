@@ -1,4 +1,6 @@
-export function ResetButton({onClick}: {onClick: (e: MouseEvent) => void}) {
+import React from "react";
+
+export function ResetButton({onClick}: {onClick: (e: React.MouseEvent) => void}) {
     return (
         <button type="button"
                 onClick={onClick}

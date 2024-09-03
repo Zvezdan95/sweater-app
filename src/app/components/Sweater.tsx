@@ -68,22 +68,21 @@ interface SweaterProps {
     sweater: SweaterType
     className: string
     width: string
-    onMouseDown: (SweaterType)=> void
-    onMouseUp: () => void
+    onDragStart: (SweaterType)=> void
 }
 
-export function Sweater({sweater, className, width, onMouseDown, onMouseUp}: SweaterProps) {
+export function Sweater({sweater, className, width, onDragStart}: SweaterProps) {
     const sweaterSrc = sweaterToImageSrc(sweater);
     return (
         <Image
             src={sweaterSrc}
             alt="Sweater Image"
+            draggable
             width={634}
             height={514}
             style={{width:width, marginLeft: "-11.5vw"}}
-            className={className}
-            onMouseDown={()=> onMouseDown(sweater)}
-            onMouseUp={onMouseUp}
+            className={"cursor-grab "+className}
+            onDragStart={(e) => onDragStart(sweater)}
         />
     );
 }

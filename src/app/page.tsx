@@ -1,41 +1,86 @@
 "use client"
 import {ImageHeader} from "@/app/components/ImageHeader";
-import {CoatHangerImage} from "@/app/components/CoatHangerImage";
-import {allSweaters, Sweater, SweaterType} from "@/app/components/Sweater";
+import {allSweaters, SweaterType} from "@/app/components/Sweater";
 import {useReducer} from "react";
-import {ShelfWithInfo} from "@/app/components/ShelfWithInfo";
 import {ResetButton} from "@/app/components/ResetButton";
+import {SelfPosition, Shelves} from "@/app/components/Shelves";
+import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
 
 enum Msg {
-    OnSweaterMouseDown,
-    OnSweaterMouseUp,
+    OnDragStart,
+    OnDrop,
     OnReset
 }
 
-function reducer(prevState, action) {
-    switch (action.__type) {
-        case Msg.OnSweaterMouseUp:
-            console.log("OnSweaterMouseUp");
-            return {
-                ...prevState, draggingSweater: null
-            };
+type AppState = {
+    unassignedSweaters: SweaterType[]
+    draggingSweater: SweaterType | null
+    lefShelf: SweaterType[]
+    middleLefShelf: SweaterType[]
+    middleRightShelf: SweaterType[]
+    rightShelf: SweaterType[]
+}
 
-        case Msg.OnSweaterMouseDown:
-            if (action.sweater) {
-                console.log("OnSweaterMouseDown", action.sweater);
-                return {
+const initialState: AppState = {
+    unassignedSweaters: allSweaters,
+    draggingSweater: null,
+    lefShelf: [],
+    middleLefShelf: [],
+    middleRightShelf: [],
+    rightShelf: []
+};
+
+type MsgPayload = {
+    msg: Msg
+    sweater: SweaterType | null
+    shelf: SelfPosition | null
+}
+
+function reducer(prevState: AppState, payload: MsgPayload): AppState {
+    switch (payload.msg) {
+
+        case Msg.OnDragStart:
+            console.log("OnDragStart", payload.sweater)
+            return {...prevState, draggingSweater: payload.sweater};
+
+        case Msg.OnDrop:
+            const {draggingSweater} = prevState;
+            if (draggingSweater != null) {
+                const newState: AppState = {
                     ...prevState,
-                    unassignedSweaters: prevState.unassignedSweaters.filter(sweater => sweater !== action.sweater)
+                    draggingSweater: null,
+                    unassignedSweaters: prevState.unassignedSweaters.filter(sweater => sweater !== draggingSweater)
+                };
+
+                const pushIfUnique = (sweaterArr: SweaterType[], sweater: SweaterType) => {
+                    if (sweaterArr.indexOf(sweater) === -1) {
+                        sweaterArr.push(sweater);
+                    }
                 }
-                // return {
-                //     ...prevState, draggingSweater: action.sweater
-                // }
+                switch (payload.shelf) {
+                    case SelfPosition.Left:
+                        pushIfUnique(newState.lefShelf, draggingSweater);
+                        return newState;
+
+                    case SelfPosition.MiddleLeft:
+                        pushIfUnique(newState.middleLefShelf, draggingSweater);
+                        return newState;
+
+                    case SelfPosition.MiddleRight:
+                        pushIfUnique(newState.middleRightShelf, draggingSweater);
+                        return newState;
+
+                    case SelfPosition.Right:
+                        pushIfUnique(newState.rightShelf, draggingSweater);
+                        return newState;
+                    default:
+                        return prevState;
+                }
             }
             return prevState;
 
-        case Msg.OnReset:return {
-            ...prevState, unassignedSweaters: allSweaters
-        };
+        case Msg.OnReset:
+            return initialState;
         default:
             return prevState;
     }
@@ -43,61 +88,40 @@ function reducer(prevState, action) {
 
 
 export default function Home() {
-    const [appState, dispatch] = useReducer(reducer, {unassignedSweaters: allSweaters, draggingSweater: null});
+    const [appState, dispatch] = useReducer(reducer, initialState);
+    const state: AppState = appState;
 
-    function handleSweaterMouseDown(sweater: SweaterType) {
-        return dispatch({__type: Msg.OnSweaterMouseDown, sweater: sweater});
-    }
 
-    function handleSweaterMouseUp() {
-        return dispatch({__type: Msg.OnSweaterMouseUp, sweater: null})
-    }
     function handleReset(e: MouseEvent) {
-        return dispatch({__type: Msg.OnReset, sweater: null});
+        return dispatch({msg: Msg.OnReset, sweater: null});
+    }
+
+    function handleDragOver(e: MouseEvent) {
+        e.preventDefault();
+    }
+
+    function handleDrop(shelf: SelfPosition, e: MouseEvent) {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch({msg: Msg.OnDrop, shelf: shelf});
+    }
+
+    function handleDragStart(sweater: SweaterType) {
+        dispatch({msg: Msg.OnDragStart, sweater: sweater});
     }
 
     return (
         <main className="flex min-h-screen flex-col bg-custom-blue-100 items-center">
             <ImageHeader/>
-            <div className="w-full relative">
-                <CoatHangerImage/>
-                <div className={"absolute top-0 left-0 right-0 "} style={{height: 170}}></div>
-                <div className="absolute left-0 right-0 bottom-0 flex flex-row items-start"
-                     style={{paddingLeft: "14vw", paddingRight: "6.82vw", top: "10.9vw"}}>
-                    {appState.unassignedSweaters.map(sweater =>
-                        <Sweater sweater={sweater} className="" width="18.3376vw"
-                                 onMouseDown={handleSweaterMouseDown}
-                                 onMouseUp={handleSweaterMouseUp}/>
-                    )}
-
-                </div>
-            </div>
-            <div className="flex flex-col md:flex-row mt-32 justify-start md:justify-between" >
-                <ShelfWithInfo counter={0}
-                               linkUrl={"www.szentistvanzene.hu"}
-                               name={"SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY"}
-                               // sweaters={allSweaters}
-                               sweaters={[]}
-                />
-                <ShelfWithInfo counter={0}
-                               linkUrl={"www.autizmus.hu"}
-                               name={"AUTIZMUS ALAPÍTVÁNY"}
-                               // sweaters={allSweaters}
-                               sweaters={[]}
-                />
-                <ShelfWithInfo counter={0}
-                               linkUrl={"www.elelmiszerbank.hu"}
-                               name={"ÉLELMISZERBANK EGYESÜLET"}
-                               // sweaters={allSweaters}
-                               sweaters={[]}
-                />
-                <ShelfWithInfo counter={0}
-                               linkUrl={"www.lampas92.hu"}
-                               name={"LÁMPÁS ’92 ALAPÍTVÁNY"}
-                               // sweaters={allSweaters}
-                               sweaters={[]}
-                />
-            </div>
+            <CoatHangerWithSweaters sweaters={state.unassignedSweaters} onDragStart={handleDragStart}/>
+            <Shelves
+                lefShelf={state.lefShelf}
+                middleLefShelf={state.middleLefShelf}
+                middleRightShelf={state.middleRightShelf}
+                rightShelf={state.rightShelf}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+            />
             <ResetButton onClick={handleReset}/>
         </main>
     );

@@ -8,11 +8,14 @@ interface ShelfProps {
     name: string,
     linkUrl: string,
     sweaters: SweaterType[]
+    onDrop: (MouseEvent) => void
+    onDragOver: (MouseEvent) => void
 }
 
-export function ShelfWithInfo({counter, name, linkUrl, sweaters}: ShelfProps) {
+export function ShelfWithInfo({counter, name, linkUrl, sweaters, onDrop, onDragOver}: ShelfProps) {
     return (
-        <div className="flex flex-row md:flex-col font-bold gap-3 items-center justify-between ">
+        <div className="flex flex-row md:flex-col font-bold gap-3 items-center justify-between " onDrop={onDrop}
+             onDragOver={onDragOver}>
             <div className="flex flex-row gap-x-6 md:hidden">
                 <InfoImage addedClass=""/>
                 <FoundationLink linkUrl={linkUrl}

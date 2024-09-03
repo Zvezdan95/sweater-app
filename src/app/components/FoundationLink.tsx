@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export  enum FoundationLinkType {
+export enum FoundationLinkType {
     TextLink,
     IconLink
 }
@@ -12,7 +12,7 @@ interface FoundationLinkProps {
 
 export function FoundationLink({linkUrl, linkType}: FoundationLinkProps) {
     return (
-        <a href={linkUrl}
+        <a href={"https://" + linkUrl}
            target="_blank"
            className="text-base text-custom-blue-100">
             {

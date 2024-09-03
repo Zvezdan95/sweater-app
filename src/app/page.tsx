@@ -4,10 +4,12 @@ import {CoatHangerImage} from "@/app/components/CoatHangerImage";
 import {allSweaters, Sweater, SweaterType} from "@/app/components/Sweater";
 import {useReducer} from "react";
 import {ShelfWithInfo} from "@/app/components/ShelfWithInfo";
+import {ResetButton} from "@/app/components/ResetButton";
 
 enum Msg {
     OnSweaterMouseDown,
-    OnSweaterMouseUp
+    OnSweaterMouseUp,
+    OnReset
 }
 
 function reducer(prevState, action) {
@@ -21,16 +23,19 @@ function reducer(prevState, action) {
         case Msg.OnSweaterMouseDown:
             if (action.sweater) {
                 console.log("OnSweaterMouseDown", action.sweater);
-                // return {
-                //     ...prevState,
-                //     unassignedSweaters: prevState.unassignedSweaters.filter(sweater => sweater !== action.sweater)
-                // }
                 return {
-                    ...prevState, draggingSweater: action.sweater
+                    ...prevState,
+                    unassignedSweaters: prevState.unassignedSweaters.filter(sweater => sweater !== action.sweater)
                 }
+                // return {
+                //     ...prevState, draggingSweater: action.sweater
+                // }
             }
             return prevState;
 
+        case Msg.OnReset:return {
+            ...prevState, unassignedSweaters: allSweaters
+        };
         default:
             return prevState;
     }
@@ -47,9 +52,12 @@ export default function Home() {
     function handleSweaterMouseUp() {
         return dispatch({__type: Msg.OnSweaterMouseUp, sweater: null})
     }
+    function handleReset(e: MouseEvent) {
+        return dispatch({__type: Msg.OnReset, sweater: null});
+    }
 
     return (
-        <main className="flex min-h-screen flex-col bg-custom-blue-100">
+        <main className="flex min-h-screen flex-col bg-custom-blue-100 items-center">
             <ImageHeader/>
             <div className="w-full relative">
                 <CoatHangerImage/>
@@ -90,7 +98,7 @@ export default function Home() {
                                sweaters={[]}
                 />
             </div>
-            <div className="h-64"></div>
+            <ResetButton onClick={handleReset}/>
         </main>
     );
 }

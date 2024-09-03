@@ -1,6 +1,6 @@
 import Image from "next/image";
-import {sweaterToColor, SweaterType} from "@/app/components/Sweater";
-import {FoldedSweater, sweaterColorToImage} from "@/app/components/FoldedSweater";
+import {SweaterType} from "@/app/components/Sweater";
+import {FoldedSweater} from "@/app/components/FoldedSweater";
 
 interface ShelfImageProps {
     classes: string

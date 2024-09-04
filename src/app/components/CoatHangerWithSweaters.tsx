@@ -6,10 +6,22 @@ import React from "react";
 interface CoatHangerWithSweatersProps {
     sweaters: SweaterType[]
     onDragStart: (sweater: SweaterType) => void
-    onSave:  (e:React.MouseEvent) => void
+    onSave: (e: React.MouseEvent) => void
+    lastRequestAt: number | null
 }
 
-export function CoatHangerWithSweaters({sweaters, onDragStart, onSave}: CoatHangerWithSweatersProps) {
+export function CoatHangerWithSweaters({sweaters, onDragStart, onSave, lastRequestAt}: CoatHangerWithSweatersProps) {
+
+    let buttonDisabled = false;
+    if (lastRequestAt !== null) {
+        const minutesPassedSinceLastRequest = minutesSince(lastRequestAt);
+        if (minutesPassedSinceLastRequest < 10) {
+            buttonDisabled = true;
+        }
+    }
+    console.log("lastRequestAt", lastRequestAt)
+    console.log("buttonDisabled", buttonDisabled)
+
     return (
         <div className="w-full relative overflow-hidden">
             <CoatHangerImage/>
@@ -21,7 +33,13 @@ export function CoatHangerWithSweaters({sweaters, onDragStart, onSave}: CoatHang
                     />
                 )}
             </div>
-            <SaveButton onClick={onSave} isVisible={sweaters.length === 0}/>
+            <SaveButton onClick={onSave} isVisible={sweaters.length === 0} isDisabled={buttonDisabled}/>
         </div>
     );
+}
+
+function minutesSince(posixTimestamp: number): number {
+    const now = Date.now();
+    const millisecondsElapsed = now - posixTimestamp;
+    return millisecondsElapsed / (1000 * 60);
 }

@@ -1,7 +1,7 @@
 "use client"
 import {ImageHeader} from "@/app/components/ImageHeader";
 import {allSweaters, SweaterType} from "@/app/components/Sweater";
-import React, {useReducer} from "react";
+import React, {useEffect, useReducer} from "react";
 import {ResetButton} from "@/app/components/ResetButton";
 import {SelfPosition, Shelves} from "@/app/components/Shelves";
 import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
@@ -12,7 +12,8 @@ enum Msg {
     OnDrop,
     OnReset,
     OnModalClose,
-    OnModalOpen
+    OnModalOpen,
+    OnReceiveLastRequestAt
 }
 
 type AppState = {
@@ -23,6 +24,7 @@ type AppState = {
     middleRightShelf: SweaterType[]
     rightShelf: SweaterType[]
     foundationDetails: FoundationDetails | null
+    lastRequestAt: number | null
 }
 
 const initialState = (): AppState => {
@@ -33,7 +35,8 @@ const initialState = (): AppState => {
         middleLefShelf: [],
         middleRightShelf: [],
         rightShelf: [],
-        foundationDetails: null
+        foundationDetails: null,
+        lastRequestAt: null
     }
 };
 
@@ -42,11 +45,11 @@ type MsgPayload = {
     sweater: SweaterType | null
     shelf: SelfPosition | null
     foundationDetails: FoundationDetails | null
+    lastRequestAt: number | null
 }
 
 function reducer(prevState: AppState, payload: MsgPayload): AppState {
-    console.log("initialState", initialState)
-    console.log("prevState", prevState)
+    console.log("prevState payload.msg", payload.msg)
     switch (payload.msg) {
 
         case Msg.OnDragStart:
@@ -89,13 +92,17 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
             return prevState;
 
         case Msg.OnReset:
-            return {...initialState()};
+            return {...initialState(), lastRequestAt: prevState.lastRequestAt};
 
         case Msg.OnModalClose:
             return {...prevState, foundationDetails: null};
 
         case Msg.OnModalOpen:
             return {...prevState, foundationDetails: payload.foundationDetails};
+
+        case Msg.OnReceiveLastRequestAt:
+            console.log("OnReceiveLastRequestAt", payload.lastRequestAt)
+            return {...prevState, lastRequestAt: payload.lastRequestAt};
 
         default:
             return prevState;
@@ -107,9 +114,25 @@ export default function Home() {
     const [appState, dispatch] = useReducer(reducer, {...initialState()});
     const state: AppState = appState;
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/get-time-of-last-request'); // Replace with your API endpoint
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const jsonData = await response.json();
+                console.log(jsonData);
+                dispatch({msg: Msg.OnReceiveLastRequestAt, lastRequestAt: jsonData.time})
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     function handleReset(e: React.MouseEvent) {
-        saveCurrentShelfStacking(state).then((res)=> console.log(res));
         return dispatch({msg: Msg.OnReset, sweater: null});
     }
 
@@ -128,7 +151,10 @@ export default function Home() {
     }
 
     function handleOnSave(e: React.MouseEvent) {
-        console.log("saved!");
+        saveCurrentShelfStacking(state)
+            .then((res) =>
+                dispatch({msg: Msg.OnReceiveLastRequestAt, lastRequestAt: Date.now()}))
+            .catch((err) => console.log(err));
     }
 
     function handleModalClose() {
@@ -146,6 +172,7 @@ export default function Home() {
                 sweaters={state.unassignedSweaters}
                 onDragStart={handleDragStart}
                 onSave={handleOnSave}
+                lastRequestAt={state.lastRequestAt}
             />
             <Shelves
                 lefShelf={state.lefShelf}
@@ -176,7 +203,7 @@ export default function Home() {
 }
 
 async function saveCurrentShelfStacking(state: AppState) {
-    const values:string[] =[];
+    const values: string[] = [];
 
     values.push(state.lefShelf.length.toString());
     values.push(state.middleLefShelf.length.toString());

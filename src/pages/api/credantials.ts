@@ -13,3 +13,6 @@ export const credentials = {
     client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/zvezdan%40sweater-app-434517.iam.gserviceaccount.com",
     universe_domain: "googleapis.com"
 }
+
+export const spreadsheetId = '112Iuj_9Hh7SUdCwpr5bBHxuUPkhC8rV4dnx6hH7nFhE';
+export const range = 'Sheet1!A1:F1';

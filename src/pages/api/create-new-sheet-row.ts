@@ -1,8 +1,6 @@
 import {google} from 'googleapis';
-import {credentials} from "@/pages/api/credantials";
+import {credentials, range, spreadsheetId} from "@/pages/api/credantials";
 import type {NextApiRequest, NextApiResponse} from "next";
-const spreadsheetId = '112Iuj_9Hh7SUdCwpr5bBHxuUPkhC8rV4dnx6hH7nFhE';
-const range = 'Sheet1!A1:F1';
 type ResponseData = {
     message: string
 }

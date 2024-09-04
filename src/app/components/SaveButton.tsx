@@ -3,10 +3,17 @@ import React from "react";
 interface SaveButtonProps {
     onClick: (e: React.MouseEvent) => void,
     isVisible: boolean
-    isDisabled: boolean
+    lastRequestAt: number | null
 }
 
-export function SaveButton({onClick, isVisible, isDisabled}: SaveButtonProps) {
+export function SaveButton({onClick, isVisible, lastRequestAt}: SaveButtonProps) {
+    let buttonDisabled = false;
+    if (lastRequestAt !== null) {
+        const minutesPassedSinceLastRequest = minutesSince(lastRequestAt);
+        if (minutesPassedSinceLastRequest < 10) {
+            buttonDisabled = true;
+        }
+    }
     return (
         <div className={
             "absolute inset-0 " +
@@ -15,8 +22,8 @@ export function SaveButton({onClick, isVisible, isDisabled}: SaveButtonProps) {
             (isVisible ? "translate-y-0 translate-x-0" : "translate-y-full translate-x-full")}>
             <button type="button"
                     onClick={onClick}
-                    disabled={isDisabled}
-                    title={isDisabled ? "Please wait 10 minutes before next submission" : ""}
+                    disabled={buttonDisabled}
+                    title={buttonDisabled ? `Please wait ${lastRequestAt ? Math.round(10 - minutesSince(lastRequestAt)) : 0} minutes before next submission` : ""}
                     className={
                         "px-8 py-2 rounded-full " +
                         "border-2 border-white border-solid " +
@@ -30,4 +37,11 @@ export function SaveButton({onClick, isVisible, isDisabled}: SaveButtonProps) {
         </div>
 
     );
+}
+
+
+function minutesSince(posixTimestamp: number): number {
+    const now = Date.now();
+    const millisecondsElapsed = now - posixTimestamp;
+    return millisecondsElapsed / (1000 * 60);
 }

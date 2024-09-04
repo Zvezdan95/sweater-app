@@ -109,6 +109,7 @@ export default function Home() {
 
 
     function handleReset(e: React.MouseEvent) {
+        saveCurrentShelfStacking(state).then((res)=> console.log(res));
         return dispatch({msg: Msg.OnReset, sweater: null});
     }
 
@@ -172,4 +173,24 @@ export default function Home() {
 
         </main>
     );
+}
+
+async function saveCurrentShelfStacking(state: AppState) {
+    const values:string[] =[];
+
+    values.push(state.lefShelf.length.toString());
+    values.push(state.middleLefShelf.length.toString());
+    values.push(state.middleRightShelf.length.toString());
+    values.push(state.rightShelf.length.toString());
+
+    return await fetch('/api/create-new-sheet-row', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Adjust if sending different data formats
+        },
+        body: JSON.stringify({
+            // Your data to send in the POST request
+            values: values
+        }),
+    });
 }

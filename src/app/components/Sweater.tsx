@@ -65,13 +65,14 @@ const sweaterToImageSrc = (type: SweaterType): string =>
         .exhaustive();
 
 interface SweaterProps {
-    sweater: SweaterType
-    className: string
-    width: string
-    onDragStart: (SweaterType)=> void
+    sweater: SweaterType,
+    className: string,
+    width: string,
+    onDragStart: (SweaterType) => void,
+    key?: number
 }
 
-export function Sweater({sweater, className, width, onDragStart}: SweaterProps) {
+export function Sweater({sweater, className, width, onDragStart, key}: SweaterProps) {
     const sweaterSrc = sweaterToImageSrc(sweater);
     return (
         <Image
@@ -80,8 +81,9 @@ export function Sweater({sweater, className, width, onDragStart}: SweaterProps) 
             draggable
             width={634}
             height={514}
-            style={{width:width, marginLeft: "-11.5vw"}}
-            className={"cursor-grab "+className}
+            key={key}
+            style={{width: width, marginLeft: "-11.5vw"}}
+            className={"cursor-grab " + className}
             onDragStart={(e) => onDragStart(sweater)}
         />
     );

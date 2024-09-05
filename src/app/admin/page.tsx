@@ -4,6 +4,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Chart, registerables} from 'chart.js';
 import {usePathname, useSearchParams} from "next/navigation";
 import {GetSheetDataResponse, initGetSheetDataResponse} from "@/types/GetSheetDataResponse";
+import {GetSheetDataQueryParams} from "@/types/GetSheetDataQueryParams";
 
 Chart.register(...registerables);
 
@@ -18,7 +19,7 @@ export default function AdminPage() {
     const [data, setData] = useState(initGetSheetDataResponse());
     const searchParams = useSearchParams();
     const maxPage = Math.ceil(data.totalRequests / 10);
-    console.log(data.totalRequests / 10);
+
     useEffect(() => {
         const url = new URL(window.location.href);
         const pageParam = url.searchParams.get('page');
@@ -38,7 +39,7 @@ export default function AdminPage() {
             setData(cachedDataValue);
             makeChart(cachedDataValue);
         } else {
-            getData(pageParam, sortParam, cacheKey).then(makeChart);
+            getData(pageParam, sortParam).then(makeChart);
         }
 
         return () => {
@@ -59,7 +60,6 @@ export default function AdminPage() {
 
     if (currentPage && currentPage !== 1) {
         hrefParams.query.page = currentPage;
-
     }
 
     function makeChart(newData: GetSheetDataResponse) {
@@ -116,7 +116,8 @@ export default function AdminPage() {
         }
     }
 
-    async function getData(pageParam:(string|null),sortParam:(string|null), cacheKey:string): Promise<GetSheetDataResponse> {
+    async function getData(pageParam: (string | null), sortParam: (string | null)): Promise<GetSheetDataResponse> {
+        const cacheKey = `${pageParam}-${sortParam}`;
         const params = [
             {key: "page", value: pageParam},
             {key: "sort", value: sortParam}]
@@ -132,6 +133,29 @@ export default function AdminPage() {
                 return newData;
 
             });
+    }
+
+    function handleOnDelete(tableIndex: number) {
+        const getSheetDataQueryParams = new GetSheetDataQueryParams({
+            "sort": sort,
+            "page": currentPage.toString()
+        });
+
+        const {startRowIndex} = getSheetDataQueryParams.toRowIndexRage(data.totalRequests);
+
+        const deleteIndex = getSheetDataQueryParams.isAscending() ? tableIndex + startRowIndex : startRowIndex - tableIndex;
+        fetch('/api/delete-row', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                rowIndex: deleteIndex
+            }),
+        })
+            .then(r => getData(currentPage.toString(), sort));
+
+
     }
 
     return (
@@ -190,7 +214,7 @@ export default function AdminPage() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                 {(data?.rows ?? []).map((row, rowIndex) => (
-                    <tr key={rowIndex}>
+                    <tr>
                         {Object.values(row).map((cell, cellIndex) => (
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 
@@ -200,6 +224,7 @@ export default function AdminPage() {
                         <td
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <button
+                                onClick={() => handleOnDelete(rowIndex)}
                                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-color duration-500">
                                 Delete
                             </button>

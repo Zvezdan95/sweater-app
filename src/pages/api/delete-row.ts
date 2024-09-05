@@ -31,10 +31,10 @@ export default function handler(
                     {
                         deleteDimension: {
                             range: {
-                                sheetId: 0, // Assuming you want to delete from the first sheet
+                                sheetId: 0,
                                 dimension: "ROWS",
                                 startIndex: rowIndex,
-                                endIndex: rowIndex + 1, // Delete one row
+                                endIndex: rowIndex + 1,
                             },
                         },
                     },

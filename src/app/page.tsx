@@ -211,10 +211,9 @@ async function saveCurrentShelfStacking(state: AppState) {
     return await fetch('/api/create-new-sheet-row', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', // Adjust if sending different data formats
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            // Your data to send in the POST request
             values: values
         }),
     });

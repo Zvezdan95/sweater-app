@@ -6,6 +6,7 @@ import {ResetButton} from "@/app/components/ResetButton";
 import {SelfPosition, Shelves} from "@/app/components/Shelves";
 import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
 import {FoundationDetails} from "@/app/components/ShelfWithInfo";
+import Link from "next/link";
 
 enum Msg {
     OnDragStart,
@@ -197,7 +198,7 @@ export default function Home() {
 
                 </div>
             </div>}
-
+            <Link href="/admin">Admin</Link>
         </main>
     );
 }

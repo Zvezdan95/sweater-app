@@ -18,7 +18,7 @@ export default function AdminPage() {
     const [data, setData] = useState(initGetSheetDataResponse());
     const searchParams = useSearchParams();
     const maxPage = Math.ceil(data.totalRequests / 10);
-
+    console.log(data.totalRequests / 10);
     useEffect(() => {
         const url = new URL(window.location.href);
         const pageParam = url.searchParams.get('page');
@@ -33,27 +33,12 @@ export default function AdminPage() {
 
         const cacheKey = `${pageParam}-${sortParam}`;
         const cachedDataValue = cachedData.get(cacheKey);
-        console.log("cachedDataValue", cachedDataValue);
+
         if (cachedDataValue) {
             setData(cachedDataValue);
-
             makeChart(cachedDataValue);
         } else {
-            const params = [
-                {key: "page", value: pageParam},
-                {key: "sort", value: sortParam}]
-                .filter(str => str.value && str.value.trim() !== "")
-                .map(({key, value}) => `${key}=${value}`)
-                .join("&");
-
-            fetch(`/api/get-sheet-data?${params}`)
-                .then(response => response.json())
-                .then(newData => {
-                    setData(newData);
-                    setCachedData(prevCache => prevCache.set(cacheKey, newData));
-
-                    makeChart(newData);
-                });
+            getData(pageParam, sortParam, cacheKey).then(makeChart);
         }
 
         return () => {
@@ -129,6 +114,24 @@ export default function AdminPage() {
                 }
             });
         }
+    }
+
+    async function getData(pageParam:(string|null),sortParam:(string|null), cacheKey:string): Promise<GetSheetDataResponse> {
+        const params = [
+            {key: "page", value: pageParam},
+            {key: "sort", value: sortParam}]
+            .filter(str => str.value && str.value.trim() !== "")
+            .map(({key, value}) => `${key}=${value}`)
+            .join("&");
+
+        return fetch(`/api/get-sheet-data?${params}`)
+            .then(response => response.json())
+            .then(newData => {
+                setData(newData);
+                setCachedData(prevCache => prevCache.set(cacheKey, newData));
+                return newData;
+
+            });
     }
 
     return (

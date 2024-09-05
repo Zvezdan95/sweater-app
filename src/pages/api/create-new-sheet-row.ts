@@ -41,9 +41,7 @@ export default function handler(
         const sheets = google.sheets({ version: 'v4' });
         sheets.spreadsheets.values.append(request)
             .then((response) => {
-                console.log(`${response.data.updates?.updatedCells} cells appended.`);
                 res.status(200).json({ message: `${response.data.updates?.updatedCells} cells appended.` })
-
             })
             .catch((err) => {
                 res.status(400).json({ message: `Error appending rows:  ${err}` })

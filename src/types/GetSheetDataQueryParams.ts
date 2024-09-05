@@ -61,7 +61,7 @@ class GetSheetDataQueryParams {
         }
 
         //assume Ascending as default
-        const startRowIndex = this.page === 1 ? 1 : pageIndexed + (pageIndexed * this.pageSize);
+        const startRowIndex = this.page === 1 ? 1 : 1 + (pageIndexed * this.pageSize);
         return {
             startRowIndex: startRowIndex,
             endRowIndex: startRowIndex + pageSizeRanged

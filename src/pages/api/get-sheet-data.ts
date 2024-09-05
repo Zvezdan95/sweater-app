@@ -2,7 +2,7 @@ import {google} from 'googleapis';
 import {credentials, range, spreadsheetId} from "@/pages/api/credantials";
 import type {NextApiRequest, NextApiResponse} from "next";
 import {GetSheetDataResponse, initGetSheetDataResponse} from "@/types/GetSheetDataResponse";
-import {DataRow} from "@/types/DataRow";
+import {arrayToDataRow, DataRow} from "@/types/DataRow";
 import {GetSheetDataQueryParams} from "@/types/GetSheetDataQueryParams";
 
 
@@ -27,23 +27,22 @@ export default function handler(
         sheets.spreadsheets.values.get(request)
             .then((response) => {
                 const {startRowIndex, endRowIndex} = parsedQueryParams.toRowIndexRage(response.data.values.length);
-                console.log("startRowIndex", startRowIndex);
-                console.log("endRowIndex", endRowIndex);
+
                 const formattedResponse: GetSheetDataResponse = response.data.values
                     .reduce((accumulator: GetSheetDataResponse, currentValue: string[], index: number) => {
                             if (index !== 0) {
-                                const dataRow: DataRow = {
-                                    lefShelf: parseInt(currentValue[0]),
-                                    middleLefShelf: parseInt(currentValue[1]),
-                                    middleRightShelf: parseInt(currentValue[2]),
-                                    rightShelf: parseInt(currentValue[3]),
-                                    ip: currentValue[4],
-                                    createdAt: parseInt(currentValue[5])
-                                };
+                                const dataRow: DataRow = arrayToDataRow(currentValue);
 
+                                if (index ===21){
+                                    console.log("startRowIndex)", startRowIndex)
+                                    console.log("endRowIndex)", endRowIndex)
+                                }
                                 if (parsedQueryParams.isAscending()) {
                                     if (index >= startRowIndex && index <= endRowIndex) {
                                         accumulator.rows.push(dataRow);
+                                        if (index ===21){
+                                            console.log(dataRow)
+                                        }
                                     }
                                 } else {
                                     if (index >= endRowIndex && index <= startRowIndex) {

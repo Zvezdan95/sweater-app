@@ -50,7 +50,6 @@ type MsgPayload = {
 }
 
 function reducer(prevState: AppState, payload: MsgPayload): AppState {
-    console.log("prevState payload.msg", payload.msg)
     switch (payload.msg) {
 
         case Msg.OnDragStart:
@@ -102,7 +101,6 @@ function reducer(prevState: AppState, payload: MsgPayload): AppState {
             return {...prevState, foundationDetails: payload.foundationDetails};
 
         case Msg.OnReceiveLastRequestAt:
-            console.log("OnReceiveLastRequestAt", payload.lastRequestAt)
             return {...prevState, lastRequestAt: payload.lastRequestAt};
 
         default:
@@ -123,7 +121,6 @@ export default function Home() {
                     throw new Error('Network response was not ok');
                 }
                 const jsonData = await response.json();
-                console.log(jsonData);
                 dispatch({msg: Msg.OnReceiveLastRequestAt, lastRequestAt: jsonData.time})
             } catch (error) {
                 console.error('Error fetching data:', error);

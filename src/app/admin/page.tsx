@@ -49,7 +49,7 @@ export default function AdminPage() {
         };
     }, [currentPage, sort, searchParams]);
 
-    const hrefParams: { query: { sort?: string | null, page?: number | null }, pathname: string } = {
+    const hrefParams: { query: { sort?: string | null, page?: number | null }, pathname: string | null } = {
         pathname: pathname,
         query: {}
     };

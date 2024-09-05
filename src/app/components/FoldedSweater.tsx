@@ -17,15 +17,17 @@ export enum SweaterColor {
 interface FoldedSweaterProps {
     sweater: SweaterType
     className: string
+    key?: number
 }
 
-export function FoldedSweater({sweater, className}: FoldedSweaterProps) {
+export function FoldedSweater({sweater, className, key}: FoldedSweaterProps) {
     const color = sweaterToColor(sweater);
     return (
         <img
             src={sweaterColorToImage(color)}
             alt="Folded Sweater Image"
             style={{width:"50%"}}
+            key={key}
             className={className}
         />
     );

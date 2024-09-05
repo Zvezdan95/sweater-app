@@ -214,14 +214,15 @@ export default function AdminPage() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                 {(data?.rows ?? []).map((row, rowIndex) => (
-                    <tr>
+                    <tr key={rowIndex}>
                         {Object.values(row).map((cell, cellIndex) => (
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td key={rowIndex + cellIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 
                                 {cellIndex === Object.values(row).length - 1 ? toFormatedTime(cell) : cell}
                             </td>
                         ))}
                         <td
+                            key{"delete" +rowIndex }
                             className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <button
                                 onClick={() => handleOnDelete(rowIndex)}

@@ -10,8 +10,9 @@ interface ShelfImageProps {
 export function Shelf({classes, sweaters}: ShelfImageProps) {
     return (
         <div className={"flex flex-col min-h-fit md:min-h-[30vw] justify-end items-center w-64 md:w-full " + classes}>
-            {sweaters.slice().reverse().map((sweater: SweaterType) =>
+            {sweaters.slice().reverse().map((sweater: SweaterType, index) =>
                 <FoldedSweater
+                    key={index}
                     sweater={sweater}
                     className="l"/>
             )}

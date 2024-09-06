@@ -1,16 +1,25 @@
 'use client'
 import Link from "next/link";
-import React, {useEffect, useRef, useState} from "react";
+import React, {Suspense, useEffect, useRef, useState} from "react";
 import {Chart, registerables} from 'chart.js';
 import {usePathname, useSearchParams} from "next/navigation";
 import {GetSheetDataResponse, initGetSheetDataResponse} from "@/types/GetSheetDataResponse";
 import {GetSheetDataQueryParams} from "@/types/GetSheetDataQueryParams";
+import {DataRow} from "@/types/DataRow";
 
 Chart.register(...registerables);
 
 type CachedData = Map<string, GetSheetDataResponse>
 
 export default function AdminPage() {
+    return(
+        <Suspense>
+            <Main/>
+        </Suspense>
+    )
+}
+
+function Main(){
     const chartRef = useRef<Chart | null>(null);
     const pathname = usePathname();
     const [currentPage, setCurrentPage] = useState(1);
@@ -196,47 +205,7 @@ export default function AdminPage() {
                     </span>
                 </Link>
             </div>
-
-            <div className="overflow-x-auto w-full">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-
-                    <tr>
-                        {["Left Shelf", "Middle Left Shelf", "Middle Right Shelf", "Right Shelf", "IP", "Created At", "Action"].map((header, index) => (
-                            <th
-                                key={header + index.toString()}
-                                scope="col"
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                            >
-                                {header}
-
-                            </th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                    {(data?.rows ?? []).map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {Object.values(row).map((cell, cellIndex) => (
-                                <td key={rowIndex + cellIndex}
-                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-
-                                    {cellIndex === Object.values(row).length - 1 ? toFormatedTime(cell as number) : cell}
-                                </td>
-                            ))}
-                            <td
-                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <button
-                                    onClick={() => handleOnDelete(rowIndex)}
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-color duration-500">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
+            <Table rows={data?.rows ?? []} handleOnDelete={handleOnDelete}/>
             <div className="flex justify-center mt-4">
                 {currentPage !== 1 && <Link
                     href={{...hrefParams, query: {...hrefParams.query, page: currentPage - 1}}}
@@ -264,6 +233,56 @@ export default function AdminPage() {
             </div>
         </main>
     );
+}
+
+interface TableProps {
+    rows: DataRow []
+    handleOnDelete: (rowIndex: number) => void
+}
+
+function Table({rows, handleOnDelete}: TableProps) {
+    return (
+        <div className="overflow-x-auto w-full">
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+
+                <tr>
+                    {["Left Shelf", "Middle Left Shelf", "Middle Right Shelf", "Right Shelf", "IP", "Created At", "Action"].map((header, index) => (
+                        <th
+                            key={header + index.toString()}
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            {header}
+
+                        </th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                {rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                        {Object.values(row).map((cell, cellIndex) => (
+                            <td key={rowIndex + cellIndex}
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+
+                                {cellIndex === Object.values(row).length - 1 ? toFormatedTime(cell as number) : cell}
+                            </td>
+                        ))}
+                        <td
+                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <button
+                                onClick={() => handleOnDelete(rowIndex)}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-color duration-500">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    )
 }
 
 function toFormatedTime(time: number): string {

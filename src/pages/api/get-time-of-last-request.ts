@@ -25,7 +25,7 @@ export default function handler(
         const sheets = google.sheets({version: 'v4'});
         sheets.spreadsheets.values.get(request)
             .then((response) => {
-                const lastUpdateTime = findFromEnd(response.data.values, (row: string[]) => {
+                const lastUpdateTime = findFromEnd(response?.data?.values ?? [], (row: string[]) => {
                     return row[4] === userIp?.toString();
                 });
 

@@ -1,7 +1,7 @@
 "use client"
 import {ImageHeader} from "@/app/components/ImageHeader";
 import {allSweaters, SweaterType} from "@/app/components/Sweater";
-import React, {useEffect, useReducer} from "react";
+import React, {DragEventHandler, useEffect, useReducer} from "react";
 import {ResetButton} from "@/app/components/ResetButton";
 import {SelfPosition, Shelves} from "@/app/components/Shelves";
 import {CoatHangerWithSweaters} from "@/app/components/CoatHangerWithSweaters";
@@ -19,13 +19,13 @@ enum Msg {
 
 type AppState = {
     unassignedSweaters: SweaterType[]
-    draggingSweater: SweaterType | null
+    draggingSweater: SweaterType | null | undefined
     lefShelf: SweaterType[]
     middleLefShelf: SweaterType[]
     middleRightShelf: SweaterType[]
     rightShelf: SweaterType[]
-    foundationDetails: FoundationDetails | null
-    lastRequestAt: number | null
+    foundationDetails: FoundationDetails | null | undefined
+    lastRequestAt: number | null | undefined
 }
 
 const initialState = (): AppState => {
@@ -43,10 +43,10 @@ const initialState = (): AppState => {
 
 type MsgPayload = {
     msg: Msg
-    sweater: SweaterType | null
-    shelf: SelfPosition | null
-    foundationDetails: FoundationDetails | null
-    lastRequestAt: number | null
+    sweater?: SweaterType | null
+    shelf?: SelfPosition | null
+    foundationDetails?: FoundationDetails | null
+    lastRequestAt?: number | null
 }
 
 function reducer(prevState: AppState, payload: MsgPayload): AppState {
@@ -134,15 +134,21 @@ export default function Home() {
         return dispatch({msg: Msg.OnReset, sweater: null});
     }
 
-    function handleDragOver(e: MouseEvent) {
-        e.preventDefault();
+    // function handleDragOver(e: DragEventHandler<HTMLDivElement>) {
+    //     e.preventDefault();
+    // }
+    function handleDrop(shelf: SelfPosition): DragEventHandler<HTMLDivElement> {
+        return (event) => {
+            const divElement = event.currentTarget as HTMLDivElement; // Type narrowing
+
+            event.preventDefault();
+            // Now you can safely use 'divElement'
+            // ... any logic that needs the specific HTMLDivElement
+
+            dispatch({ msg: Msg.OnDrop, shelf: shelf });
+        };
     }
 
-    function handleDrop(shelf: SelfPosition, e: MouseEvent) {
-        e.stopPropagation();
-        e.preventDefault();
-        dispatch({msg: Msg.OnDrop, shelf: shelf});
-    }
 
     function handleDragStart(sweater: SweaterType) {
         dispatch({msg: Msg.OnDragStart, sweater: sweater});
@@ -177,7 +183,7 @@ export default function Home() {
                 middleLefShelf={state.middleLefShelf}
                 middleRightShelf={state.middleRightShelf}
                 rightShelf={state.rightShelf}
-                onDragOver={handleDragOver}
+                // onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onInfoClick={handleModalOpen}
             />

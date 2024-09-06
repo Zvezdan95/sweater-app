@@ -3,19 +3,81 @@ import {match} from 'ts-pattern';
 import Image from "next/image";
 
 export enum SweaterType {
-    Sweater1,
-    Sweater2,
-    Sweater3,
-    Sweater4,
-    Sweater5,
-    Sweater6,
-    Sweater7,
-    Sweater8,
-    Sweater9,
-    Sweater10,
-    Sweater11,
-    Sweater12
+    Sweater1 = "Sweater1",
+    Sweater2 = "Sweater2",
+    Sweater3 = "Sweater3",
+    Sweater4 = "Sweater4",
+    Sweater5 = "Sweater5",
+    Sweater6 = "Sweater6",
+    Sweater7 = "Sweater7",
+    Sweater8 = "Sweater8",
+    Sweater9 = "Sweater9",
+    Sweater10 = "Sweater10",
+    Sweater11 = "Sweater11",
+    Sweater12 = "Sweater12"
 }
+
+interface SweaterTypeSweater1 {
+    type: SweaterType.Sweater1;
+}
+
+interface SweaterTypeSweater2 {
+    type: SweaterType.Sweater2;
+}
+
+interface SweaterTypeSweater3 {
+    type: SweaterType.Sweater3;
+}
+
+interface SweaterTypeSweater4 {
+    type: SweaterType.Sweater4;
+}
+
+interface SweaterTypeSweater5 {
+    type: SweaterType.Sweater5;
+}
+
+interface SweaterTypeSweater6 {
+    type: SweaterType.Sweater6;
+}
+
+interface SweaterTypeSweater7 {
+    type: SweaterType.Sweater7;
+}
+
+interface SweaterTypeSweater8 {
+    type: SweaterType.Sweater8;
+}
+
+interface SweaterTypeSweater9 {
+    type: SweaterType.Sweater9;
+}
+
+interface SweaterTypeSweater10 {
+    type: SweaterType.Sweater10;
+}
+
+interface SweaterTypeSweater11 {
+    type: SweaterType.Sweater11;
+}
+
+interface SweaterTypeSweater12 {
+    type: SweaterType.Sweater12;
+}
+
+type SweaterType_
+    = SweaterTypeSweater1
+    | SweaterTypeSweater2
+    | SweaterTypeSweater3
+    | SweaterTypeSweater4
+    | SweaterTypeSweater5
+    | SweaterTypeSweater6
+    | SweaterTypeSweater7
+    | SweaterTypeSweater8
+    | SweaterTypeSweater9
+    | SweaterTypeSweater10
+    | SweaterTypeSweater11
+    | SweaterTypeSweater12;
 
 export const allSweaters: SweaterType[] = [
     SweaterType.Sweater1,
@@ -32,43 +94,48 @@ export const allSweaters: SweaterType[] = [
     SweaterType.Sweater12
 ]
 
-export const sweaterToColor = (type: SweaterType): SweaterColor =>
-    match(type)
-        .with(SweaterType.Sweater1, () => SweaterColor.Blue)
-        .with(SweaterType.Sweater2, () => SweaterColor.Darkgreen)
-        .with(SweaterType.Sweater3, () => SweaterColor.White)
-        .with(SweaterType.Sweater4, () => SweaterColor.Red)
-        .with(SweaterType.Sweater5, () => SweaterColor.Green)
-        .with(SweaterType.Sweater6, () => SweaterColor.White)
-        .with(SweaterType.Sweater7, () => SweaterColor.Beige)
-        .with(SweaterType.Sweater8, () => SweaterColor.Lightgreen)
-        .with(SweaterType.Sweater9, () => SweaterColor.Maroon)
-        .with(SweaterType.Sweater10, () => SweaterColor.Green2)
-        .with(SweaterType.Sweater11, () => SweaterColor.Blue)
-        .with(SweaterType.Sweater12, () => SweaterColor.Lightblue)
-        .exhaustive();
 
-const sweaterToImageSrc = (type: SweaterType): string =>
-    match(type)
-        .with(SweaterType.Sweater1, () => "/sweater1.png")
-        .with(SweaterType.Sweater2, () => "/sweater2.png")
-        .with(SweaterType.Sweater3, () => "/sweater3.png")
-        .with(SweaterType.Sweater4, () => "/sweater4.png")
-        .with(SweaterType.Sweater5, () => "/sweater5.png")
-        .with(SweaterType.Sweater6, () => "/sweater6.png")
-        .with(SweaterType.Sweater7, () => "/sweater7.png")
-        .with(SweaterType.Sweater8, () => "/sweater8.png")
-        .with(SweaterType.Sweater9, () => "/sweater9.png")
-        .with(SweaterType.Sweater10, () => "/sweater10.png")
-        .with(SweaterType.Sweater11, () => "/sweater11.png")
-        .with(SweaterType.Sweater12, () => "/sweater12.png")
+export const sweaterToColor = (sweaterType: SweaterType): SweaterColor => {
+    const sadType: SweaterType_ = {type: sweaterType} as SweaterType_;
+    return match(sadType)
+        .with({type: SweaterType.Sweater1}, () => SweaterColor.Blue)
+        .with({type: SweaterType.Sweater2}, () => SweaterColor.Darkgreen)
+        .with({type: SweaterType.Sweater3}, () => SweaterColor.White)
+        .with({type: SweaterType.Sweater4}, () => SweaterColor.Red)
+        .with({type: SweaterType.Sweater5}, () => SweaterColor.Green)
+        .with({type: SweaterType.Sweater6}, () => SweaterColor.White)
+        .with({type: SweaterType.Sweater7}, () => SweaterColor.Beige)
+        .with({type: SweaterType.Sweater8}, () => SweaterColor.Lightgreen)
+        .with({type: SweaterType.Sweater9}, () => SweaterColor.Maroon)
+        .with({type: SweaterType.Sweater10}, () => SweaterColor.Green2)
+        .with({type: SweaterType.Sweater11}, () => SweaterColor.Blue)
+        .with({type: SweaterType.Sweater12}, () => SweaterColor.Lightblue)
         .exhaustive();
+}
+
+const sweaterToImageSrc = (type: SweaterType): string => {
+    const sadType: SweaterType_ = {type: type} as SweaterType_;
+    return match(sadType)
+        .with({type: SweaterType.Sweater1}, () => "/sweater1.png")
+        .with({type: SweaterType.Sweater2}, () => "/sweater2.png")
+        .with({type: SweaterType.Sweater3}, () => "/sweater3.png")
+        .with({type: SweaterType.Sweater4}, () => "/sweater4.png")
+        .with({type: SweaterType.Sweater5}, () => "/sweater5.png")
+        .with({type: SweaterType.Sweater6}, () => "/sweater6.png")
+        .with({type: SweaterType.Sweater7}, () => "/sweater7.png")
+        .with({type: SweaterType.Sweater8}, () => "/sweater8.png")
+        .with({type: SweaterType.Sweater9}, () => "/sweater9.png")
+        .with({type: SweaterType.Sweater10}, () => "/sweater10.png")
+        .with({type: SweaterType.Sweater11}, () => "/sweater11.png")
+        .with({type: SweaterType.Sweater12}, () => "/sweater12.png")
+        .exhaustive();
+}
 
 interface SweaterProps {
     sweater: SweaterType,
     className: string,
     width: string,
-    onDragStart: (SweaterType) => void,
+    onDragStart: (sweater: SweaterType) => void,
     key?: number
 }
 

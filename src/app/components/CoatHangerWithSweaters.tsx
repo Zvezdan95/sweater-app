@@ -7,7 +7,7 @@ interface CoatHangerWithSweatersProps {
     sweaters: SweaterType[]
     onDragStart: (sweater: SweaterType) => void
     onSave: (e: React.MouseEvent) => void
-    lastRequestAt: number | null
+    lastRequestAt: number | null | undefined
 }
 
 export function CoatHangerWithSweaters({sweaters, onDragStart, onSave, lastRequestAt}: CoatHangerWithSweatersProps) {
@@ -24,7 +24,7 @@ export function CoatHangerWithSweaters({sweaters, onDragStart, onSave, lastReque
                     />
                 )}
             </div>
-            <SaveButton onClick={onSave} isVisible={sweaters.length === 0} lastRequestAt={lastRequestAt} />
+            <SaveButton onClick={onSave} isVisible={sweaters.length === 0} lastRequestAt={lastRequestAt}/>
         </div>
     );
 }

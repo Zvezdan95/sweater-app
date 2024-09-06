@@ -3,7 +3,7 @@ import React from "react";
 interface SaveButtonProps {
     onClick: (e: React.MouseEvent) => void,
     isVisible: boolean
-    lastRequestAt: number | null
+    lastRequestAt: number | null | undefined
 }
 
 export function SaveButton({onClick, isVisible, lastRequestAt}: SaveButtonProps) {
@@ -40,8 +40,13 @@ export function SaveButton({onClick, isVisible, lastRequestAt}: SaveButtonProps)
 }
 
 
-function minutesSince(posixTimestamp: number): number {
-    const now = Date.now();
-    const millisecondsElapsed = now - posixTimestamp;
-    return millisecondsElapsed / (1000 * 60);
+function minutesSince(posixTimestamp: number | null | undefined): number {
+    if (typeof posixTimestamp === "number") {
+        const now = Date.now();
+        const millisecondsElapsed = now - posixTimestamp;
+
+        return millisecondsElapsed / (1000 * 60);
+    }
+
+    return 0;
 }

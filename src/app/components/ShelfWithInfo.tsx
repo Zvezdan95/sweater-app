@@ -2,6 +2,7 @@ import {InfoImage} from "@/app/components/InfoImage";
 import {FoundationLink, FoundationLinkType} from "@/app/components/FoundationLink";
 import {Shelf} from "@/app/components/Shelf";
 import {SweaterType} from "@/app/components/Sweater";
+import {DragEventHandler} from "react";
 
 export  type FoundationDetails = {
     name: string
@@ -12,12 +13,12 @@ interface ShelfProps {
     name: string,
     linkUrl: string,
     sweaters: SweaterType[]
-    onDrop: (MouseEvent) => void
-    onDragOver: (MouseEvent) => void
-    onInfoClick: (FoundationDetails) => void
+    onDrop: DragEventHandler<HTMLDivElement>,
+    // onDragOver: DragEventHandler<HTMLDivElement>,
+    onInfoClick: (event:FoundationDetails) => void
 }
 
-export function ShelfWithInfo({ name, linkUrl, sweaters, onDrop, onDragOver, onInfoClick}: ShelfProps) {
+export function ShelfWithInfo({ name, linkUrl, sweaters, onDrop,  onInfoClick}: ShelfProps) {
     const foundationDetails: FoundationDetails = {
         name: name,
         description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait "
@@ -26,7 +27,8 @@ export function ShelfWithInfo({ name, linkUrl, sweaters, onDrop, onDragOver, onI
 
     return (
         <div className="flex flex-row md:flex-col font-bold gap-3 items-center justify-between " onDrop={onDrop}
-             onDragOver={onDragOver}>
+             // onDragOver={onDragOver}
+        >
             <div className="flex flex-row gap-x-6 md:hidden">
                 <InfoImage addedClass="" onClick={infoClick}/>
                 <FoundationLink linkUrl={linkUrl}

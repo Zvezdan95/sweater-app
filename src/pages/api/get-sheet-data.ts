@@ -8,7 +8,7 @@ import {GetSheetDataQueryParams} from "@/types/GetSheetDataQueryParams";
 
 export default function handler(
     req: NextApiRequest,
-    res: NextApiResponse<GetSheetDataResponse>
+    res: NextApiResponse<GetSheetDataResponse| {errorMsg:string}>
 ) {
     if (req.method === 'GET') {
         const parsedQueryParams = new GetSheetDataQueryParams(req.query);
@@ -26,21 +26,24 @@ export default function handler(
         const sheets = google.sheets({version: 'v4'});
         sheets.spreadsheets.values.get(request)
             .then((response) => {
-                const {startRowIndex, endRowIndex} = parsedQueryParams.toRowIndexRage(response.data.values.length);
+                const {
+                    startRowIndex,
+                    endRowIndex
+                } = parsedQueryParams.toRowIndexRage(response?.data?.values?.length ?? 0);
 
-                const formattedResponse: GetSheetDataResponse = response.data.values
+                const formattedResponse: GetSheetDataResponse = (response?.data?.values ?? [])
                     .reduce((accumulator: GetSheetDataResponse, currentValue: string[], index: number) => {
                             if (index !== 0) {
                                 const dataRow: DataRow = arrayToDataRow(currentValue);
 
-                                if (index ===21){
+                                if (index === 21) {
                                     console.log("startRowIndex)", startRowIndex)
                                     console.log("endRowIndex)", endRowIndex)
                                 }
                                 if (parsedQueryParams.isAscending()) {
                                     if (index >= startRowIndex && index <= endRowIndex) {
                                         accumulator.rows.push(dataRow);
-                                        if (index ===21){
+                                        if (index === 21) {
                                             console.log(dataRow)
                                         }
                                     }
@@ -57,7 +60,8 @@ export default function handler(
                                 accumulator.totalMiddleRightShelf += dataRow.middleRightShelf;
                                 accumulator.totalRightShelf += dataRow.rightShelf;
 
-                                if (response.data.values.length - 1 === index) {
+                                if (response?.data?.values?.length &&
+                                    response?.data?.values?.length - 1 === index) {
                                     accumulator.lastRequestCreateAt = dataRow.createdAt
                                 }
                             }
@@ -71,7 +75,7 @@ export default function handler(
 
             })
             .catch((err) => {
-                res.status(400).json({time: `Error fetching rows:  ${err}`})
+                res.status(400).json({errorMsg: `Error fetching rows:  ${err}`})
             });
     }
 }

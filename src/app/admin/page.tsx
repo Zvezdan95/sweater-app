@@ -163,13 +163,13 @@ export default function AdminPage() {
             className="flex min-h-screen flex-col gap-y-8 bg-custom-blue-100 items-center relative m-4 text-custom-blue-500 bg-white rounded-md p-8">
             <h1 className="text-4xl font-bold">Admin Dashboard</h1>
             <Link href="/" className="hover:text-custom-blue-400 transition-color duration-500">go back to home</Link>
-            <div className="flex flex-col gap-y-2 border-soild border border-custom-blue-100 rounded p-2">
+            <div className="flex flex-col lg:flex-row gap-2 border-soild border border-custom-blue-100 rounded p-2">
                 <h2 className={"text-xl p-1 bg-custom-blue-100 rounded"}>Total number of submitted requests
                     : {data.totalRequests}</h2>
-                <h2 className={"text-xl p-1 bg-custom-blue-100 rounded"}>lastRequestCreateAt: {toFormatedTime(data.lastRequestCreateAt)}</h2>
+                <h2 className={"text-xl p-1 bg-custom-blue-100 rounded"}>lastRequestCreateAt: {toFormatedTime(data.lastRequestCreateAt as number)}</h2>
             </div>
 
-            <canvas id="chart"></canvas>
+            <canvas id="chart" className={"max-w-[64rem]"}></canvas>
             <div className="flex flex-row gap-x-4">
                 {<Link
                     href={{...hrefParams, query: {...hrefParams.query, sort: "ascending"}}}
@@ -196,43 +196,47 @@ export default function AdminPage() {
                     </span>
                 </Link>
             </div>
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
 
-                <tr>
-                    {["Left Shelf", "Middle Left Shelf", "Middle Right Shelf", "Right Shelf", "IP", "Created At", "Action"].map((header, index) => (
-                        <th
-                            key={index}
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-                            {header}
+            <div className="overflow-x-auto w-full">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
 
-                        </th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {(data?.rows ?? []).map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {Object.values(row).map((cell, cellIndex) => (
-                            <td key={rowIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <tr>
+                        {["Left Shelf", "Middle Left Shelf", "Middle Right Shelf", "Right Shelf", "IP", "Created At", "Action"].map((header, index) => (
+                            <th
+                                key={header + index.toString()}
+                                scope="col"
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                                {header}
 
-                                {cellIndex === Object.values(row).length - 1 ? toFormatedTime(cell) : cell}
-                            </td>
+                            </th>
                         ))}
-                        <td
-                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <button
-                                onClick={() => handleOnDelete(rowIndex)}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-color duration-500">
-                                Delete
-                            </button>
-                        </td>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                    {(data?.rows ?? []).map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {Object.values(row).map((cell, cellIndex) => (
+                                <td key={rowIndex + cellIndex}
+                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+
+                                    {cellIndex === Object.values(row).length - 1 ? toFormatedTime(cell as number) : cell}
+                                </td>
+                            ))}
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button
+                                    onClick={() => handleOnDelete(rowIndex)}
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-color duration-500">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
             <div className="flex justify-center mt-4">
                 {currentPage !== 1 && <Link
                     href={{...hrefParams, query: {...hrefParams.query, page: currentPage - 1}}}

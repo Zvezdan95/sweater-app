@@ -8,8 +8,7 @@ interface ShelvesProps {
     middleRightShelf: SweaterType[]
     rightShelf: SweaterType[]
     onDrop: (shelf: SelfPosition) => DragEventHandler<HTMLDivElement>,
-    // onDragOver: DragEventHandler<HTMLDivElement>,
-    onInfoClick: (foundationDetails:FoundationDetails) => void
+    onInfoClick: (foundationDetails: FoundationDetails) => void
 }
 
 export enum SelfPosition {
@@ -26,7 +25,6 @@ export function Shelves({
                             middleRightShelf,
                             rightShelf,
                             onDrop,
-                            // onDragOver
                         }: ShelvesProps) {
     return (
         <div className="flex flex-col md:flex-row 16 justify-start md:justify-between">
@@ -34,14 +32,12 @@ export function Shelves({
                 linkUrl={"www.szentistvanzene.hu"}
                 name={"SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY"}
                 sweaters={lefShelf}
-                // onDragOver={onDragOver}
                 onDrop={e => onDrop(SelfPosition.Left)}
                 onInfoClick={onInfoClick}
             />
             <ShelfWithInfo
                 linkUrl={"www.autizmus.hu"}
                 name={"AUTIZMUS ALAPÍTVÁNY"}
-                // onDragOver={onDragOver}
                 onDrop={e => onDrop(SelfPosition.MiddleLeft)}
                 sweaters={middleLefShelf}
                 onInfoClick={onInfoClick}
@@ -50,7 +46,6 @@ export function Shelves({
                 linkUrl={"www.elelmiszerbank.hu"}
                 name={"ÉLELMISZERBANK EGYESÜLET"}
                 sweaters={middleRightShelf}
-                // onDragOver={onDragOver}
                 onDrop={e => onDrop(SelfPosition.MiddleRight)}
                 onInfoClick={onInfoClick}
             />
@@ -58,7 +53,6 @@ export function Shelves({
                 linkUrl={"www.lampas92.hu"}
                 name={"LÁMPÁS ’92 ALAPÍTVÁNY"}
                 sweaters={rightShelf}
-                // onDragOver={onDragOver}
                 onDrop={e => onDrop(SelfPosition.Right)}
                 onInfoClick={onInfoClick}
             />

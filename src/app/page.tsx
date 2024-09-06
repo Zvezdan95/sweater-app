@@ -134,18 +134,11 @@ export default function Home() {
         return dispatch({msg: Msg.OnReset, sweater: null});
     }
 
-    // function handleDragOver(e: DragEventHandler<HTMLDivElement>) {
-    //     e.preventDefault();
-    // }
     function handleDrop(shelf: SelfPosition): DragEventHandler<HTMLDivElement> {
+
+        dispatch({ msg: Msg.OnDrop, shelf: shelf });
         return (event) => {
-            const divElement = event.currentTarget as HTMLDivElement; // Type narrowing
-
-            event.preventDefault();
-            // Now you can safely use 'divElement'
-            // ... any logic that needs the specific HTMLDivElement
-
-            dispatch({ msg: Msg.OnDrop, shelf: shelf });
+            const divElement = event.currentTarget as HTMLDivElement;
         };
     }
 
@@ -183,7 +176,6 @@ export default function Home() {
                 middleLefShelf={state.middleLefShelf}
                 middleRightShelf={state.middleRightShelf}
                 rightShelf={state.rightShelf}
-                // onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onInfoClick={handleModalOpen}
             />

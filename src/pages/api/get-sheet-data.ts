@@ -36,16 +36,9 @@ export default function handler(
                             if (index !== 0) {
                                 const dataRow: DataRow = arrayToDataRow(currentValue);
 
-                                if (index === 21) {
-                                    console.log("startRowIndex)", startRowIndex)
-                                    console.log("endRowIndex)", endRowIndex)
-                                }
                                 if (parsedQueryParams.isAscending()) {
                                     if (index >= startRowIndex && index <= endRowIndex) {
                                         accumulator.rows.push(dataRow);
-                                        if (index === 21) {
-                                            console.log(dataRow)
-                                        }
                                     }
                                 } else {
                                     if (index >= endRowIndex && index <= startRowIndex) {

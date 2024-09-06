@@ -14,11 +14,10 @@ interface ShelfProps {
     linkUrl: string,
     sweaters: SweaterType[]
     onDrop: DragEventHandler<HTMLDivElement>,
-    // onDragOver: DragEventHandler<HTMLDivElement>,
-    onInfoClick: (event:FoundationDetails) => void
+    onInfoClick: (event: FoundationDetails) => void
 }
 
-export function ShelfWithInfo({ name, linkUrl, sweaters, onDrop,  onInfoClick}: ShelfProps) {
+export function ShelfWithInfo({name, linkUrl, sweaters, onDrop, onInfoClick}: ShelfProps) {
     const foundationDetails: FoundationDetails = {
         name: name,
         description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait "
@@ -27,7 +26,7 @@ export function ShelfWithInfo({ name, linkUrl, sweaters, onDrop,  onInfoClick}: 
 
     return (
         <div className="flex flex-row md:flex-col font-bold gap-3 items-center justify-between " onDrop={onDrop}
-             // onDragOver={onDragOver}
+             onDragOver={(e)=> e.preventDefault()}
         >
             <div className="flex flex-row gap-x-6 md:hidden">
                 <InfoImage addedClass="" onClick={infoClick}/>

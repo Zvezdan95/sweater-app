@@ -19,7 +19,7 @@ export default function handler(
             res.status(400).send({message: "ip problem"});
         }
 
-        console.log(userIp);
+
         values.push(userIp)
         values.push(Date.now().toString())
 

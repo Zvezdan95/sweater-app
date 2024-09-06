@@ -14,70 +14,14 @@ export enum SweaterType {
     Sweater9 = "Sweater9",
     Sweater10 = "Sweater10",
     Sweater11 = "Sweater11",
-    Sweater12 = "Sweater12"
+    Sweater12 = "Sweater12",
 }
 
-interface SweaterTypeSweater1 {
-    type: SweaterType.Sweater1;
-}
-
-interface SweaterTypeSweater2 {
-    type: SweaterType.Sweater2;
-}
-
-interface SweaterTypeSweater3 {
-    type: SweaterType.Sweater3;
-}
-
-interface SweaterTypeSweater4 {
-    type: SweaterType.Sweater4;
-}
-
-interface SweaterTypeSweater5 {
-    type: SweaterType.Sweater5;
-}
-
-interface SweaterTypeSweater6 {
-    type: SweaterType.Sweater6;
-}
-
-interface SweaterTypeSweater7 {
-    type: SweaterType.Sweater7;
-}
-
-interface SweaterTypeSweater8 {
-    type: SweaterType.Sweater8;
-}
-
-interface SweaterTypeSweater9 {
-    type: SweaterType.Sweater9;
-}
-
-interface SweaterTypeSweater10 {
-    type: SweaterType.Sweater10;
-}
-
-interface SweaterTypeSweater11 {
-    type: SweaterType.Sweater11;
-}
-
-interface SweaterTypeSweater12 {
-    type: SweaterType.Sweater12;
-}
 
 type SweaterType_
-    = SweaterTypeSweater1
-    | SweaterTypeSweater2
-    | SweaterTypeSweater3
-    | SweaterTypeSweater4
-    | SweaterTypeSweater5
-    | SweaterTypeSweater6
-    | SweaterTypeSweater7
-    | SweaterTypeSweater8
-    | SweaterTypeSweater9
-    | SweaterTypeSweater10
-    | SweaterTypeSweater11
-    | SweaterTypeSweater12;
+    = {
+    type: SweaterType
+}
 
 export const allSweaters: SweaterType[] = [
     SweaterType.Sweater1,

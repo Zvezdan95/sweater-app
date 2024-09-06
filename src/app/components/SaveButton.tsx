@@ -41,12 +41,17 @@ export function SaveButton({onClick, isVisible, lastRequestAt}: SaveButtonProps)
 
 
 function minutesSince(posixTimestamp: number | null | undefined): number {
-    if (typeof posixTimestamp === "number") {
-        const now = Date.now();
-        const millisecondsElapsed = now - posixTimestamp;
+    console.log("posixTimestamp", posixTimestamp)
+    console.log("posixTimestamp", typeof posixTimestamp)
+    console.log("posixTimestamp", typeof posixTimestamp === "number")
+    if (posixTimestamp === null || posixTimestamp === undefined) {
 
-        return millisecondsElapsed / (1000 * 60);
+        return 0;
     }
 
-    return 0;
+    const posixTimestampNumber = typeof posixTimestamp === "string" ? parseInt(posixTimestamp, 10) : posixTimestamp;
+    const now = Date.now();
+    const millisecondsElapsed = now - posixTimestampNumber;
+
+    return millisecondsElapsed / (1000 * 60);
 }
